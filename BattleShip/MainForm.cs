@@ -20,13 +20,6 @@ namespace BattleShip
         public MainForm()
         {
             InitializeComponent();
-            System.Reflection.PropertyInfo aProp =
-         typeof(Control).GetProperty(
-               "DoubleBuffered",
-               System.Reflection.BindingFlags.NonPublic |
-               System.Reflection.BindingFlags.Instance);
-
-            aProp.SetValue(panel1, true, null); 
         }
 
         enum State
@@ -88,7 +81,6 @@ namespace BattleShip
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            
             int w = panel1.Width / objBattle.ReturnMasSize();
             int h = panel1.Height / objBattle.ReturnMasSize();
             ControlPaint.DrawGrid(e.Graphics, new Rectangle(Point.Empty, panel1.Size), new Size(w, 1), Color.White);
@@ -100,6 +92,10 @@ namespace BattleShip
                         e.Graphics.FillRectangle(Brushes.White, j * w + 1, i * h + 1, w - 1, h - 1);
                     if (objBattle[i, j] == 1 || objBattle[i, j] == 2)
                         e.Graphics.FillRectangle(Brushes.Navy, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle[i, j] == 3)
+                        e.Graphics.FillRectangle(Brushes.Green, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle[i, j] == 4)
+                        e.Graphics.FillRectangle(Brushes.Black, j * w + 1, i * h + 1, w - 1, h - 1);
                 }
         }
 
