@@ -15,27 +15,28 @@ namespace BattleShip
         //private int IMaxLength = 4;
         //private int JMaxLength = 4;
 
-        Logic objBattle = new Logic();
+        private Logic objBattle = new Logic();
 
         public MainForm()
         {
             InitializeComponent();
             System.Reflection.PropertyInfo aProp =
-         typeof(Control).GetProperty(
-               "DoubleBuffered",
-               System.Reflection.BindingFlags.NonPublic |
-               System.Reflection.BindingFlags.Instance);
+                typeof (Control).GetProperty(
+                    "DoubleBuffered",
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Instance);
 
-            aProp.SetValue(panel1, true, null); 
+            aProp.SetValue(panel1, true, null);
         }
 
-        enum State
+        private enum State
         {
             Clear,
             Ship,
             Miss,
             Hit
         }
+
         //private void Form1_Load(object sender, EventArgs e)
         //{
         //    for(int i= 0;i<10;i++)
@@ -55,7 +56,7 @@ namespace BattleShip
         //            Controls.Add(userGrid[i,j]);
         //            userGrid[i,j].Size= new Size(25,25);
         //            userGrid[i, j].Location = new Point(j*25+25, i*25+25);
-                    
+
         //        }
         //}
 
@@ -78,28 +79,28 @@ namespace BattleShip
 
         //private bool CheckBut(int i, int j)
         //{
-            
+
         //}
 
         //private void EnemyButtonClick(object sender, EventArgs e)
         //{
-            
+
         //}
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            
-            int w = panel1.Width / objBattle.ReturnMasSize();
-            int h = panel1.Height / objBattle.ReturnMasSize();
+
+            int w = panel1.Width/objBattle.ReturnMasSize();
+            int h = panel1.Height/objBattle.ReturnMasSize();
             ControlPaint.DrawGrid(e.Graphics, new Rectangle(Point.Empty, panel1.Size), new Size(w, 1), Color.White);
             ControlPaint.DrawGrid(e.Graphics, new Rectangle(Point.Empty, panel1.Size), new Size(1, h), Color.White);
             for (int i = 0; i < objBattle.ReturnMasSize(); i++)
                 for (int j = 0; j < objBattle.ReturnMasSize(); j++)
                 {
                     if (objBattle[i, j] == 0)
-                        e.Graphics.FillRectangle(Brushes.White, j * w + 1, i * h + 1, w - 1, h - 1);
+                        e.Graphics.FillRectangle(Brushes.White, j*w + 1, i*h + 1, w - 1, h - 1);
                     if (objBattle[i, j] == 1 || objBattle[i, j] == 2)
-                        e.Graphics.FillRectangle(Brushes.Navy, j * w + 1, i * h + 1, w - 1, h - 1);
+                        e.Graphics.FillRectangle(Brushes.Navy, j*w + 1, i*h + 1, w - 1, h - 1);
                 }
         }
 
@@ -111,12 +112,12 @@ namespace BattleShip
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             if (!(radioButton1.Enabled == false && radioButton2.Enabled == false && radioButton3.Enabled == false
-                && radioButton4.Enabled == false))
+                  && radioButton4.Enabled == false))
             {
-                int w = panel1.Width / objBattle.ReturnMasSize();
-                int h = panel1.Height / objBattle.ReturnMasSize();
-                int x = e.X / w;
-                int y = e.Y / h;
+                int w = panel1.Width/objBattle.ReturnMasSize();
+                int h = panel1.Height/objBattle.ReturnMasSize();
+                int x = e.X/w;
+                int y = e.Y/h;
                 int size;
                 if (radioButton1.Checked) size = 1;
                 else if (radioButton2.Checked) size = 2;
@@ -142,10 +143,10 @@ namespace BattleShip
             }
             else
             {
-                int w = panel1.Width / objBattle.ReturnMasSize();
-                int h = panel1.Height / objBattle.ReturnMasSize();
-                int x = e.X / w;
-                int y = e.Y / h;
+                int w = panel1.Width/objBattle.ReturnMasSize();
+                int h = panel1.Height/objBattle.ReturnMasSize();
+                int x = e.X/w;
+                int y = e.Y/h;
                 int size;
                 if (radioButton1.Checked) size = 1;
                 else if (radioButton2.Checked) size = 2;
@@ -191,13 +192,14 @@ namespace BattleShip
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
                     objBattle[i, j] = 0;
-            int y, x, count = 0, size = 0;
-            while (count < 10)
+            int y, x, count = 9, size=0;
+            while (count >=0)
             {
                 Random r = new Random();
-                if (count > 3) size = 1;
-                if (count > 6) size = 2;
-                if (count > 8) size = 3;
+                if(count<4) size = 0;
+                else if (count < 7) size = 1;
+                else if (count < 9) size = 2;
+                else if (count  == 9) size = 3;
                 y = r.Next(0, 10);
                 x = r.Next(0, 10);
                 if (r.Next(0, 2) == 1)
@@ -205,7 +207,7 @@ namespace BattleShip
                 if (objBattle.CheckSq(x, y, size, objBattle.GetLink()))
                 {
                     objBattle.CreateShip(x, y, 2, size, objBattle.GetLink());
-                    count++;
+                    count--;
                 }
             }
             radioButton1.Enabled = false;

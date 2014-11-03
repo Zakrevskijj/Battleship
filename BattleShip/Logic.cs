@@ -10,6 +10,17 @@ namespace BattleShip
 {
     class Logic
     {
+        private int[][] _You = new int[10][];
+        private int[][] _Enemy = new int[10][];
+        private bool _vertical;
+        private int _count1X;
+        private int _count2X;
+        private int _count3X;
+        private int _count4X;
+        private int _myShip = 20;
+        private int _enemyShip = 20;
+
+
         public Logic()
         {
             for (int i = 0; i < _You.Count(); i++)
@@ -50,16 +61,16 @@ namespace BattleShip
             int iMaxLimitV = 1 + size;
             if (_vertical)
                 for (int i = iMinLimitV; i < iMaxLimitV; i++)
-                    if (y + i >= 0 && y + i < 10)
-                        if (mas[y + i][x] != 2)
-                            mas[y + i][x] = value;
+                    if (y + i >= 0 && y + i < 10 && x<10)
+                            if (mas[y + i][x] != 2)
+                                mas[y + i][x] = value;
             dopPoint = mas.Count() - 1 - x - size;
             if (dopPoint > 0) dopPoint = 0;
             int jMinLimitH = 0 + dopPoint;
             int jMaxLimitH = 1 + size;
             if (!_vertical)
                 for (int j = jMinLimitH; j < jMaxLimitH; j++)
-                    if (x + j >= 0 && x + j < 10)
+                    if (x + j >= 0 && x + j < 10 && y<10)
                         if (mas[y][x + j] != 2)
                             mas[y][x + j] = value;
         }
@@ -104,6 +115,7 @@ namespace BattleShip
                                 return false;
             dopPoint = mas.Count() - 1 - x - size;
             if (dopPoint > 0) dopPoint = 0;
+            else return false;
             int jMinLimitH = -1 + dopPoint;
             int jMaxLimitH = 2 + size;
             if (!_vertical)
@@ -223,14 +235,6 @@ namespace BattleShip
             set { _enemyShip = value; }
         }
 
-        private int[][] _You = new int[10][];
-        private int[][] _Enemy = new int[10][];
-        private bool _vertical;
-        private int _count1X;
-        private int _count2X;
-        private int _count3X;
-        private int _count4X;
-        private int _myShip = 20;
-        private int _enemyShip = 20;
+       
     }
 }
