@@ -160,11 +160,11 @@ namespace BattleShip
                     else if (radioButton2.Checked) objBattle.Count2X++;
                     else if (radioButton3.Checked) objBattle.Count3X++;
                     else objBattle.Count4X++;
-                    if (objBattle.Count1X > 3) radioButton1.Enabled = false;
-                    if (objBattle.Count2X > 2) radioButton2.Enabled = false;
-                    if (objBattle.Count3X > 1) radioButton3.Enabled = false;
-                    if (objBattle.Count4X > 0) radioButton4.Enabled = false;
-                    objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);
+                    if (objBattle.Count1X > 3 && radioButton1.Enabled) { radioButton1.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
+                    if (objBattle.Count2X > 2 && radioButton2.Enabled) { radioButton2.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
+                    if (objBattle.Count3X > 1 && radioButton3.Enabled) {radioButton3.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);}
+                    if (objBattle.Count4X > 0 && radioButton4.Enabled) { radioButton4.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
+                    
                 }
                 panel1.Invalidate();
             }

@@ -103,7 +103,7 @@ namespace BattleShip
         //проверяем квадраты на соседства
         public bool CheckSq(int x, int y, int size, int[][] mas)
         {
-            int dopPoint = mas.Count() - 1 - y - size;
+            int dopPoint = mas.Count()  - y - size;
             if (dopPoint > 0) dopPoint = 0;
             int iMinLimitV = -1 + dopPoint;
             int iMaxLimitV = 2 + size;
@@ -111,11 +111,11 @@ namespace BattleShip
                 for (int i = iMinLimitV; i < iMaxLimitV; i++)
                     for (int j = -1; j < 2; j++)
                         if (y + i >= 0 && y + i < 10 && x + j >= 0 && x + j < 10)
-                            if (mas[y + i][x + j] > 0)
+                        if (mas[y + i][x + j] > 0)
                                 return false;
-            dopPoint = mas.Count() - 1 - x - size;
+            dopPoint = mas.Count()  - x - size;
             if (dopPoint > 0) dopPoint = 0;
-            else return false;
+            //else return false;
             int jMinLimitH = -1 + dopPoint;
             int jMaxLimitH = 2 + size;
             if (!_vertical)
@@ -234,7 +234,5 @@ namespace BattleShip
             get { return _enemyShip; }
             set { _enemyShip = value; }
         }
-
-       
     }
 }
