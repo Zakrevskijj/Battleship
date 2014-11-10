@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BattleShip
@@ -12,14 +8,13 @@ namespace BattleShip
     {
         private int[][] _You = new int[10][];
         private int[][] _Enemy = new int[10][];
-        private bool _vertical;
+        public static bool _vertical;
         private int _count1X;
         private int _count2X;
         private int _count3X;
         private int _count4X;
         private int _myShip = 20;
         private int _enemyShip = 20;
-
 
         public Logic()
         {

@@ -145,13 +145,18 @@ namespace BattleShip
             {
                 int w = panel1.Width/objBattle.ReturnMasSize();
                 int h = panel1.Height/objBattle.ReturnMasSize();
-                int x = e.X/w;
-                int y = e.Y/h;
+                //wcf
                 int size;
                 if (radioButton1.Checked) size = 1;
                 else if (radioButton2.Checked) size = 2;
                 else if (radioButton3.Checked) size = 3;
                 else size = 4;
+                int x = e.X/w;
+                int y = e.Y/h;
+                if (x == 9 && size != 0 && !Logic._vertical)
+                    x -= size;
+                if (y == 9 && size != 0 && Logic._vertical)
+                    y -= size;
                 objBattle.NullMas();
                 if (objBattle.CheckSq(x, y, size - 1, objBattle.GetLink()))
                 {
@@ -223,6 +228,7 @@ namespace BattleShip
 
         private void button1_Click(object sender, EventArgs e)
         {
+
         }
 
     }
