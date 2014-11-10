@@ -153,10 +153,10 @@ namespace BattleShip
                 else size = 4;
                 int x = e.X/w;
                 int y = e.Y/h;
-                if (x == 9 && size != 0 && !Logic._vertical)
-                    x -= size;
-                if (y == 9 && size != 0 && Logic._vertical)
-                    y -= size;
+                if (x == 9 && size != 1 && !Logic._vertical)
+                    x -= size-1;
+                if (y == 9 && size != 1 && Logic._vertical)
+                    y -= size-1;
                 objBattle.NullMas();
                 if (objBattle.CheckSq(x, y, size - 1, objBattle.GetLink()))
                 {
@@ -167,7 +167,7 @@ namespace BattleShip
                     else objBattle.Count4X++;
                     if (objBattle.Count1X > 3 && radioButton1.Enabled) { radioButton1.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
                     if (objBattle.Count2X > 2 && radioButton2.Enabled) { radioButton2.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
-                    if (objBattle.Count3X > 1 && radioButton3.Enabled) {radioButton3.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);}
+                    if (objBattle.Count3X > 1 && radioButton3.Enabled) { radioButton3.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);}
                     if (objBattle.Count4X > 0 && radioButton4.Enabled) { radioButton4.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
                     
                 }
