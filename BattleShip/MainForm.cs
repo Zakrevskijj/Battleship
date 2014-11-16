@@ -6,15 +6,6 @@ namespace BattleShip
 {
     public partial class MainForm : Form
     {
-        //Control[,] userGrid = new Button[10, 10];
-        //Control[,] enemyGrid = new Button[10, 10];
-        //private State[,] userStates = new State[10, 10];
-        //private State[,] enStates = new State[10, 10];
-        //private int[] userShips=new int[4]{4,3,2,1};
-        //private int[] enemyShips = new int[4] { 4, 3, 2, 1 };
-        //private int IMaxLength = 4;
-        //private int JMaxLength = 4;
-
         private Logic objBattle = new Logic();
 
         public MainForm()
@@ -29,67 +20,8 @@ namespace BattleShip
             aProp.SetValue(panel1, true, null);
         }
 
-        private enum State
-        {
-            Clear,
-            Ship,
-            Miss,
-            Hit
-        }
-
-        //private void Form1_Load(object sender, EventArgs e)
-        //{
-        //    for(int i= 0;i<10;i++)
-        //        for (int j = 0; j < 10; j++)
-        //        {
-        //            enemyGrid[i,j]=new Button();
-        //            enemyGrid[i, j].Tag = i.ToString() + j.ToString();
-        //            enemyGrid[i,j].Click+=EnemyButtonClick;
-        //            Controls.Add(enemyGrid[i, j]);
-        //            enemyGrid[i, j].Size=new Size(25,25);
-        //            enemyGrid[i, j].Location = new Point(j * 25 + 325, i * 25 + 25);
-        //            enemyGrid[i, j].Enabled = false;
-
-        //            userGrid[i, j] = new Button();
-        //            userGrid[i, j].Tag = i.ToString() + j.ToString();
-        //            userGrid[i, j].Click += UserButtonClick;
-        //            Controls.Add(userGrid[i,j]);
-        //            userGrid[i,j].Size= new Size(25,25);
-        //            userGrid[i, j].Location = new Point(j*25+25, i*25+25);
-
-        //        }
-        //}
-
-        //private void UserButtonClick(object sender, EventArgs e)
-        //{
-        //    int i = Convert.ToInt32((sender as Button).Tag.ToString()[0].ToString());
-        //    int j = Convert.ToInt32((sender as Button).Tag.ToString()[1].ToString());
-        //    if (userStates[i, j] == State.Clear)
-        //    {
-        //        if(CheckBut(i,j))
-        //        userStates[i, j] = State.Ship;
-        //        (sender as Button).Text = "X";
-        //    }
-        //    else
-        //    {
-        //        userStates[i, j] = State.Clear;
-        //        (sender as Button).Text = "";
-        //    }
-        //}
-
-        //private bool CheckBut(int i, int j)
-        //{
-
-        //}
-
-        //private void EnemyButtonClick(object sender, EventArgs e)
-        //{
-
-        //}
-
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-
             int w = panel1.Width/objBattle.ReturnMasSize();
             int h = panel1.Height/objBattle.ReturnMasSize();
             ControlPaint.DrawGrid(e.Graphics, new Rectangle(Point.Empty, panel1.Size), new Size(w, 1), Color.White);
@@ -98,9 +30,33 @@ namespace BattleShip
                 for (int j = 0; j < objBattle.ReturnMasSize(); j++)
                 {
                     if (objBattle[i, j] == 0)
-                        e.Graphics.FillRectangle(Brushes.White, j*w + 1, i*h + 1, w - 1, h - 1);
-                    if (objBattle[i, j] == 1 || objBattle[i, j] == 2)
-                        e.Graphics.FillRectangle(Brushes.Navy, j*w + 1, i*h + 1, w - 1, h - 1);
+                        e.Graphics.FillRectangle(Brushes.White, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle[i, j] == 2 || objBattle[i, j] == 1)
+                        e.Graphics.FillRectangle(Brushes.Navy, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle[i, j] == 4)
+                        e.Graphics.FillRectangle(Brushes.LightCoral, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle[i, j] == 3)
+                        e.Graphics.FillRectangle(Brushes.Red, j * w + 1, i * h + 1, w - 1, h - 1);
+                   
+                }
+        }
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+            int w = panel1.Width / objBattle.ReturnMasSize();
+            int h = panel1.Height / objBattle.ReturnMasSize();
+            ControlPaint.DrawGrid(e.Graphics, new Rectangle(Point.Empty, panel1.Size), new Size(w, 1), Color.White);
+            ControlPaint.DrawGrid(e.Graphics, new Rectangle(Point.Empty, panel1.Size), new Size(1, h), Color.White);
+            for (int i = 0; i < objBattle.ReturnMasSize(); i++)
+                for (int j = 0; j < objBattle.ReturnMasSize(); j++)
+                {
+                    if (objBattle.GetEnemyValue(i, j) < 3)
+                        e.Graphics.FillRectangle(Brushes.White, j * w + 1, i * h + 1, w - 1, h - 1);
+                    //if (objBattle.GetEnemyValue(i, j) == 2)
+                    //    e.Graphics.FillRectangle(Brushes.Red, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle.GetEnemyValue(i, j) == 3)
+                        e.Graphics.FillRectangle(Brushes.Red, j * w + 1, i * h + 1, w - 1, h - 1);
+                    if (objBattle.GetEnemyValue(i, j) == 4)
+                        e.Graphics.FillRectangle(Brushes.LightCoral, j * w + 1, i * h + 1, w - 1, h - 1);
                 }
         }
 
@@ -153,11 +109,12 @@ namespace BattleShip
                 else size = 4;
                 int x = e.X/w;
                 int y = e.Y/h;
-                if (x == 9 && size != 1 && !Logic._vertical)
-                    x -= size-1;
-                if (y == 9 && size != 1 && Logic._vertical)
-                    y -= size-1;
+                if (x == 9 && size != 1 && !Logic.Vertical)
+                    x -= size - 1;
+                if (y == 9 && size != 1 && Logic.Vertical)
+                    y -= size - 1;
                 objBattle.NullMas();
+
                 if (objBattle.CheckSq(x, y, size - 1, objBattle.GetLink()))
                 {
                     objBattle.CreateShip(x, y, 2, size - 1, objBattle.GetLink());
@@ -165,11 +122,30 @@ namespace BattleShip
                     else if (radioButton2.Checked) objBattle.Count2X++;
                     else if (radioButton3.Checked) objBattle.Count3X++;
                     else objBattle.Count4X++;
-                    if (objBattle.Count1X > 3 && radioButton1.Enabled) { radioButton1.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
-                    if (objBattle.Count2X > 2 && radioButton2.Enabled) { radioButton2.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
-                    if (objBattle.Count3X > 1 && radioButton3.Enabled) { radioButton3.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);}
-                    if (objBattle.Count4X > 0 && radioButton4.Enabled) { radioButton4.Enabled = false; objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4); }
-                    
+                    if (objBattle.Count1X > 3 && radioButton1.Enabled)
+                    {
+                        radioButton1.Enabled = false;
+                        objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);
+                    }
+                    else if (objBattle.Count2X > 2 && radioButton2.Enabled)
+                    {
+                        radioButton2.Enabled = false;
+                        objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);
+                    }
+                    else if (objBattle.Count3X > 1 && radioButton3.Enabled)
+                    {
+                        radioButton3.Enabled = false;
+                        objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);
+                    }
+                    else if (objBattle.Count4X > 0 && radioButton4.Enabled)
+                    {
+                        radioButton4.Enabled = false;
+                        objBattle.FindNextRb(radioButton1, radioButton2, radioButton3, radioButton4);
+                    }
+                    if (objBattle.Count4X > 0 && objBattle.Count3X > 1 && objBattle.Count2X > 2 && objBattle.Count1X > 3)
+                    {
+                        buttonReady.Enabled = true;
+                    }
                 }
                 panel1.Invalidate();
             }
@@ -190,28 +166,34 @@ namespace BattleShip
             radioButton3.Enabled = true;
             radioButton4.Enabled = true;
             panel1.Invalidate();
+            buttonReady.Enabled = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            var r = new Random();
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
                     objBattle[i, j] = 0;
             int y, x, count = 9, size=0;
-            while (count >=0)
+            while (count >= 0)
             {
-                Random r = new Random();
-                if(count<4) size = 0;
-                else if (count < 7) size = 1;
-                else if (count < 9) size = 2;
-                else if (count  == 9) size = 3;
+                if (count < 4) size = 1;
+                else if (count < 7) size = 2;
+                else if (count < 9) size = 3;
+                else if (count == 9) size = 4;
                 y = r.Next(0, 10);
                 x = r.Next(0, 10);
                 if (r.Next(0, 2) == 1)
                     objBattle.ChangeVerctical();
-                if (objBattle.CheckSq(x, y, size, objBattle.GetLink()))
+                objBattle.NullMas();
+                //if (x == 9 && size != 1 && !Logic.Vertical)
+                //    x -= size - 1;
+                //if (y == 9 && size != 1 && Logic.Vertical)
+                //    y -= size - 1;
+                if (objBattle.CheckSq(x, y, size - 1, objBattle.GetLink()))
                 {
-                    objBattle.CreateShip(x, y, 2, size, objBattle.GetLink());
+                    objBattle.CreateShip(x, y, 2, size - 1, objBattle.GetLink());
                     count--;
                 }
             }
@@ -219,16 +201,98 @@ namespace BattleShip
             radioButton2.Enabled = false;
             radioButton3.Enabled = false;
             radioButton4.Enabled = false;
-            radioButton1.Checked = false;
-            radioButton2.Checked = false;
-            radioButton3.Checked = false;
-            radioButton4.Checked = false;
             panel1.Invalidate();
+            buttonReady.Enabled = true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void panel2_MouseClick(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Left && buttonAutoGen.Enabled == false)
+            {
+                int w = panel1.Width / objBattle.ReturnMasSize();
+                int h = panel1.Height / objBattle.ReturnMasSize();
+                int x = e.X / w;
+                int y = e.Y / h;
+                if (objBattle.GetEnemyValue(y, x) == 2)
+                {
+                    objBattle.SetEnemyValue(y, x, 3);
+                    objBattle.EnemyShip--;
+                    objBattle.Explosion(x, y, objBattle.GetEnemyLink());
+                    panel2.Invalidate();
+                    if (objBattle.EnemyShip == 0)
+                        Victory("Победил человек");
+                }
+                else if (objBattle.GetEnemyValue(y, x) == 0)
+                {
+                    EnemyTurn();
+                    objBattle.SetEnemyValue(y, x, 4);
+                    panel2.Invalidate();
+                }
+            }
+        }
 
+        private void EnemyTurn()
+        {
+            int x, y;
+            Random r = new Random();
+            bool flag = true;
+            while (flag)
+            {
+                x = r.Next(0, 10);
+                y = r.Next(0, 10);
+                if (objBattle[x, y] == 0 || objBattle[x, y] == 2)
+                    flag = false;
+                if (objBattle[x, y] == 0)
+                {
+                    objBattle[x, y] = 4;
+                    panel1.Invalidate();
+                }
+                else
+                {
+                    objBattle[x, y] = 3;
+                    objBattle.MyShip--;
+                    objBattle.Explosion(x, y, objBattle.GetLink());
+                    if (objBattle.MyShip == 0)
+                        Victory("Победил компьютер");
+                }
+            }
+        }
+
+        private void Victory(string str)
+        {
+            
+        }
+
+        private void buttonReady_Click(object sender, EventArgs e)
+        {
+            panel1.Enabled = false;
+            label1.Text = @"Играем против компьютера";
+            label1.Location = new Point(label1.Location.X - 75, label1.Location.Y);
+            objBattle.Count1X = 0;
+            objBattle.Count2X = 0;
+            objBattle.Count3X = 0;
+            objBattle.Count4X = 0;
+            int y, x, count = 10, size = 3;
+            while (count > 0)
+            {
+                Random r = new Random();
+                if (count < 10) size = 2;
+                if (count < 8) size = 1;
+                if (count < 5) size = 0;
+                y = r.Next(0, 10);
+                x = r.Next(0, 10);
+                if (r.Next(0, 2) == 1)
+                    objBattle.ChangeVerctical();
+                if (objBattle.CheckSq(x, y, size, objBattle.GetEnemyLink()))
+                {
+                    objBattle.CreateShip(x, y, 2, size, objBattle.GetEnemyLink());
+                    count--;
+                }
+            }
+            panel2.Invalidate();
+            buttonReady.Enabled = false;
+            buttonReset.Enabled = false;
+            buttonAutoGen.Enabled = false;
         }
 
     }

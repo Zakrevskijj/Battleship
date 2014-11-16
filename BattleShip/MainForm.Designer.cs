@@ -37,6 +37,7 @@
             this.buttonReady = new System.Windows.Forms.Button();
             this.buttonReset = new System.Windows.Forms.Button();
             this.buttonAutoGen = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // panel1
@@ -54,8 +55,10 @@
             // 
             this.panel2.Location = new System.Drawing.Point(277, 59);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(160, 160);
+            this.panel2.Size = new System.Drawing.Size(161, 161);
             this.panel2.TabIndex = 2;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            this.panel2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseClick);
             // 
             // radioButton1
             // 
@@ -107,13 +110,14 @@
             // 
             // buttonReady
             // 
+            this.buttonReady.Enabled = false;
             this.buttonReady.Location = new System.Drawing.Point(366, 251);
             this.buttonReady.Name = "buttonReady";
             this.buttonReady.Size = new System.Drawing.Size(74, 40);
             this.buttonReady.TabIndex = 7;
-            this.buttonReady.Text = "Расттавил";
+            this.buttonReady.Text = "Старт";
             this.buttonReady.UseVisualStyleBackColor = true;
-            this.buttonReady.Click += new System.EventHandler(this.button1_Click);
+            this.buttonReady.Click += new System.EventHandler(this.buttonReady_Click);
             // 
             // buttonReset
             // 
@@ -135,11 +139,21 @@
             this.buttonAutoGen.UseVisualStyleBackColor = true;
             this.buttonAutoGen.Click += new System.EventHandler(this.button3_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(114, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "label1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(452, 292);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonAutoGen);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonReady);
@@ -168,6 +182,7 @@
         private System.Windows.Forms.Button buttonReady;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.Button buttonAutoGen;
+        private System.Windows.Forms.Label label1;
 
     }
 }
