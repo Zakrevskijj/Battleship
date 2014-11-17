@@ -7,7 +7,7 @@ namespace BattleShip
     public partial class MainForm : Form
     {
         private Logic objBattle = new Logic();
-
+        private bool net=false;
         public MainForm()
         {
             InitializeComponent();
@@ -265,34 +265,59 @@ namespace BattleShip
 
         private void buttonReady_Click(object sender, EventArgs e)
         {
-            panel1.Enabled = false;
-            label1.Text = @"Играем против компьютера";
-            label1.Location = new Point(label1.Location.X - 75, label1.Location.Y);
-            objBattle.Count1X = 0;
-            objBattle.Count2X = 0;
-            objBattle.Count3X = 0;
-            objBattle.Count4X = 0;
-            int y, x, count = 10, size = 3;
-            while (count > 0)
+            if (net)
             {
-                Random r = new Random();
-                if (count < 10) size = 2;
-                if (count < 8) size = 1;
-                if (count < 5) size = 0;
-                y = r.Next(0, 10);
-                x = r.Next(0, 10);
-                if (r.Next(0, 2) == 1)
-                    objBattle.ChangeVerctical();
-                if (objBattle.CheckSq(x, y, size, objBattle.GetEnemyLink()))
-                {
-                    objBattle.CreateShip(x, y, 2, size, objBattle.GetEnemyLink());
-                    count--;
-                }
+                panel1.Enabled = false;
+                label1.Text = @"Играем по сети";
+                label1.Location = new Point(label1.Location.X - 75, label1.Location.Y);
+
             }
-            panel2.Invalidate();
-            buttonReady.Enabled = false;
-            buttonReset.Enabled = false;
-            buttonAutoGen.Enabled = false;
+            else
+            {
+                panel1.Enabled = false;
+                label1.Text = @"Играем против компьютера";
+                label1.Location = new Point(label1.Location.X - 75, label1.Location.Y);
+                objBattle.Count1X = 0;
+                objBattle.Count2X = 0;
+                objBattle.Count3X = 0;
+                objBattle.Count4X = 0;
+                int y, x, count = 10, size = 3;
+                while (count > 0)
+                {
+                    Random r = new Random();
+                    if (count < 10) size = 2;
+                    if (count < 8) size = 1;
+                    if (count < 5) size = 0;
+                    y = r.Next(0, 10);
+                    x = r.Next(0, 10);
+                    if (r.Next(0, 2) == 1)
+                        objBattle.ChangeVerctical();
+                    if (objBattle.CheckSq(x, y, size, objBattle.GetEnemyLink()))
+                    {
+                        objBattle.CreateShip(x, y, 2, size, objBattle.GetEnemyLink());
+                        count--;
+                    }
+                }
+                panel2.Invalidate();
+                buttonReady.Enabled = false;
+                buttonReset.Enabled = false;
+                buttonAutoGen.Enabled = false;
+            }
+        }
+
+        private void сКомпьютеромToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            net = false;
+        }
+
+        private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            net = true;
+        }
+
+        private void присоединитсяToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            net = true;
         }
 
     }
