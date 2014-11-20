@@ -8,7 +8,8 @@ namespace BattleShip
     public partial class MainForm : Form
     {
         private Logic objBattle = new Logic();
-        private bool net=false;
+        private bool _net;
+        public static int X, Y;
         Network nw = new Network();
         public MainForm()
         {
@@ -177,15 +178,15 @@ namespace BattleShip
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
                     objBattle[i, j] = 0;
-            int y, x, count = 9, size=0;
+            int count = 9, size=0;
             while (count >= 0)
             {
                 if (count < 4) size = 1;
                 else if (count < 7) size = 2;
                 else if (count < 9) size = 3;
                 else if (count == 9) size = 4;
-                y = r.Next(0, 10);
-                x = r.Next(0, 10);
+                int y = r.Next(0, 10);
+                int x = r.Next(0, 10);
                 if (r.Next(0, 2) == 1)
                     objBattle.ChangeVerctical();
                 objBattle.NullMas();
@@ -208,12 +209,12 @@ namespace BattleShip
         {
             if (e.Button == MouseButtons.Left && buttonAutoGen.Enabled == false)
             {
-                if (!net)
+                int w = panel1.Width / objBattle.ReturnMasSize();
+                int h = panel1.Height / objBattle.ReturnMasSize();
+                int x = e.X / w;
+                int y = e.Y / h;
+                if (!_net)
                 {
-                    int w = panel1.Width / objBattle.ReturnMasSize();
-                    int h = panel1.Height / objBattle.ReturnMasSize();
-                    int x = e.X / w;
-                    int y = e.Y / h;
                     if (objBattle.GetEnemyValue(y, x) == 2)
                     {
                         objBattle.SetEnemyValue(y, x, 3);
@@ -232,43 +233,41 @@ namespace BattleShip
                 }
                 else
                 {
-                    int w = panel1.Width / objBattle.ReturnMasSize();
-                    int h = panel1.Height / objBattle.ReturnMasSize();
-                    int x = e.X / w;
-                    int y = e.Y / h;
-                    string boom = x.ToString() + y.ToString();
-                    new Thread(new ParameterizedThreadStart(nw.ThreadSend)).Start(boom);
+                    string boom = x + y.ToString();
+                    new Thread(nw.ThreadSend).Start(boom);
                 }
             }
         }
 
         private void EnemyTurn()
         {
-            int x, y;
+            //if(!_net)
             Random r = new Random();
             bool flag = true;
             while (flag)
             {
-                x = r.Next(0, 10);
-                y = r.Next(0, 10);
-                if (objBattle[x, y] == 0 || objBattle[x, y] == 2)
-                    flag = false;
-                if (objBattle[x, y] == 0)
+                if (!_net)
                 {
-                    objBattle[x, y] = 4;
+                    X = r.Next(0, 10);
+                    Y = r.Next(0, 10);
+                }
+                if (objBattle[X, Y] == 0 || objBattle[X, Y] == 2)
+                    flag = false;
+                if (objBattle[X, Y] == 0)
+                {
+                    objBattle[X, Y] = 4;
                     panel1.Invalidate();
                 }
                 else
                 {
-                    objBattle[x, y] = 3;
+                    objBattle[X, Y] = 3;
                     objBattle.MyShip--;
-                    objBattle.Explosion(x, y, objBattle.GetLink());
+                    objBattle.Explosion(X, Y, objBattle.GetLink());
                     if (objBattle.MyShip == 0)
                         Victory("Победил компьютер");
                 }
             }
         }
-
         private void Victory(string str)
         {
             MessageBox.Show(str);
@@ -276,18 +275,15 @@ namespace BattleShip
 
         private void buttonReady_Click(object sender, EventArgs e)
         {
-            if (net)
+            if (_net)
             {
                 panel1.Enabled = false;
                 label1.Text = @"Играем по сети";
                 label1.Location = new Point(label1.Location.X - 75, label1.Location.Y);
                 panel2.Invalidate();
                 buttonReady.Enabled = false;
-                buttonReady.Visible = false;
                 buttonReset.Enabled = false;
-                buttonReset.Visible = false;
                 buttonAutoGen.Enabled = false;
-                buttonAutoGen.Visible = false;
             }
             else
             {
@@ -317,22 +313,19 @@ namespace BattleShip
                 }
                 panel2.Invalidate();
                 buttonReady.Enabled = false;
-                buttonReady.Visible = false;
                 buttonReset.Enabled = false;
-                buttonReset.Visible = false;
                 buttonAutoGen.Enabled = false;
-                buttonAutoGen.Visible = false;
             }
         }
 
         private void сКомпьютеромToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            net = false;
+            _net = false;
         }
 
         private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            net = true;
+            _net = true;
             new Thread(new ThreadStart(nw.Receiver)).Start();
         }
 
@@ -341,8 +334,8 @@ namespace BattleShip
             FormForIP FFIP=new FormForIP();
             if (FFIP.ShowDialog()==DialogResult.OK)
             {
-                net = true;
-                nw.IP = FFIP.IPHere.Text;
+                _net = true;
+                nw.Ip = FFIP.IPHere.Text;
                 nw.Connect();
                 new Thread(new ThreadStart(nw.Receiver)).Start();
             }
@@ -354,7 +347,7 @@ namespace BattleShip
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            nw.disconnect();
+            nw.Disconnect();
             this.Dispose(true);
             this.Close();
             Application.Exit();
