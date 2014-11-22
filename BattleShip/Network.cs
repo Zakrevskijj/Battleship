@@ -9,11 +9,12 @@ namespace BattleShip
 {
     class Network
     {
-        public Network()
+        public object SForm;
+        public Network(object form)
         {
-            IPHostEntry host;
+            SForm = form;
             string localIp = "";
-            host = Dns.GetHostEntry(Dns.GetHostName());
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (IPAddress ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
@@ -34,8 +35,9 @@ namespace BattleShip
             get;
             set;
         }
+        
 
-        public string Ip
+        public IPAddress Ip
         {
             get;
             set;
@@ -63,20 +65,32 @@ namespace BattleShip
                         //Количество считанных байт
                         Int32 ReceivedBytes;
                         do
-                        {//Собственно читаем
+                        {
+//Собственно читаем
                             ReceivedBytes = ReceiveSocket.Receive(receive, receive.Length, 0);
                             //и записываем в поток
                             messageR.Write(receive, 0, ReceivedBytes);
                             //Читаем до тех пор, пока в очереди не останется данных
                         } while (ReceiveSocket.Available > 0);
                         //Добавляем изменения в Data or IP
-                        if (IPAddress.Parse(Encoding.Default.GetString(messageR.ToArray())) is IPAddress)
+                        IPAddress ip;
+                        string message = Encoding.Default.GetString(messageR.ToArray());
+                        if (IPAddress.TryParse(message, out ip))
                         {
-                            Ip=Encoding.Default.GetString(messageR.ToArray());
+                            Ip = ip;
+                            return;
                         }
-                        Data=Encoding.Default.GetString(messageR.ToArray());
-                        MainForm.X = Int32.Parse(Data.Substring(0, 1));
-                        MainForm.Y = Int32.Parse(Data.Substring(1, 1));
+                        var mainForm = SForm as MainForm;
+                        if (message.Length == 1)
+
+                        {
+                            mainForm.objBattle[MainForm.X, MainForm.Y] = int.Parse(message);
+                            return;
+                        }
+                        MainForm.X = Int32.Parse(message.Substring(0, 1));
+                        MainForm.Y = Int32.Parse(message.Substring(1, 1));
+                        if (mainForm != null) mainForm.EnemyTurn();
+                        return;
                     }
                 }
                 catch (Exception ex)
@@ -90,7 +104,7 @@ namespace BattleShip
         {
             try
             {
-                _endPoint = new IPEndPoint(IPAddress.Parse(Ip), 7000);
+                _endPoint = new IPEndPoint(Ip, 7000);
                 _connector = new Socket(_endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _connector.Connect(_endPoint);
                 //Проверяем входной объект на соответствие строке
@@ -117,7 +131,7 @@ namespace BattleShip
         {
             try
             {
-                _endPoint = new IPEndPoint(IPAddress.Parse(Ip), 7000);
+                _endPoint = new IPEndPoint(Ip, 7000);
                 _connector = new Socket(_endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _connector.Connect(_endPoint);
                 Byte[] sendBytes = Encoding.Default.GetBytes(MyIP);

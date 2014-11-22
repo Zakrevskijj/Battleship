@@ -5,7 +5,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace BattleShip
 {
-    class Logic
+    public class Logic
     {
         #region Values
         private int[][] _you = new int[10][];
