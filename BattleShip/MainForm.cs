@@ -24,6 +24,7 @@ namespace BattleShip
                     System.Reflection.BindingFlags.Instance);
 
             aProp.SetValue(panel1, true, null);
+            aProp.SetValue(panel2, true, null);
         }
 
         #region Paints
@@ -261,12 +262,15 @@ namespace BattleShip
                 if (objBattle[X, Y] == 0)
                 {
                     objBattle[X, Y] = 4;
+                    if (_net)
                     nw.ThreadSend(4);
+                    
                     panel1.Invalidate();
                 }
                 else
                 {
                     objBattle[X, Y] = 3;
+                    if (_net)
                     nw.ThreadSend(3);
                     objBattle.MyShip--;
                     objBattle.Explosion(X, Y, objBattle.GetLink());
